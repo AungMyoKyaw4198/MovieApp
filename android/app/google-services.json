@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "553323424898",
+    "project_id": "movie-app-45fc9",
+    "storage_bucket": "movie-app-45fc9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553323424898:android:939689f13048dfac16989b",
+        "android_client_info": {
+          "package_name": "com.mmc.youTubeApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553323424898-t4i6bqb6aginpf45jn23qo98qllsanug.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZf1nJRg2qhXf62v5JN9Yjv4YDMT5f438"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553323424898-t4i6bqb6aginpf45jn23qo98qllsanug.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

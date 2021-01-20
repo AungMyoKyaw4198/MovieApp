@@ -151,7 +151,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                         ),
               ),
 
-              // Sghow video container
+              // Show video container
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: GridView.count(

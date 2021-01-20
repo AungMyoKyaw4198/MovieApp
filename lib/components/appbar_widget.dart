@@ -28,6 +28,7 @@ Widget drawerWidget(context){
                       ),
                   ),
                 Divider(color: Colors.grey,),
+                drawerListTile(icon: Icons.movie,name: 'Foreign Movies', context: context,routeName: Routes.movies),
                 drawerListTile(icon: Icons.local_movies,name: 'MM Movies', context: context,routeName: Routes.movie),
                 drawerListTile(icon: Icons.person,name: 'Favourite Movies',context: context, routeName: Routes.favVideo),
                 Divider(color: Colors.grey,),

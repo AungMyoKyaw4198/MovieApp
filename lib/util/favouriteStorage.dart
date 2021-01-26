@@ -15,7 +15,7 @@ class FavouriteStorage {
     final path = await _localPath;
     return File('$path/favoriteVideo.dat');
   }
- 
+
   Future writeFavorites(List favoritesList) async {
     try {
       final file = await _localFile;
@@ -31,7 +31,7 @@ class FavouriteStorage {
  
     return false;
   }
- 
+
   Future readFavorites() async {
     try {
       final file = await _localFile;

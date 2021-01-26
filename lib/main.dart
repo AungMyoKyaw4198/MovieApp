@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/screen/fav_screen.dart';
 import 'package:youTubeApp/screen/home.dart';
@@ -7,6 +8,8 @@ import 'package:youTubeApp/screen/tv_channels.dart';
 import 'package:youTubeApp/util/routes.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Admob.initialize(testDeviceIds: ['ca-app-pub-8107971978330636~8056578093']);
   runApp(MyApp());
 }
 
@@ -20,7 +23,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // home: Home(),
       home: AllMoviesScreen(),
       routes:  {
         Routes.movie: (context) => Home(),

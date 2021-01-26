@@ -1,9 +1,11 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
 import 'package:youTubeApp/components/widget.dart';
 import 'package:youTubeApp/model/channel.dart';
 import 'package:youTubeApp/model/video.dart';
+import 'package:youTubeApp/services/ads.dart';
 import 'package:youTubeApp/services/api_service.dart';
 
 class ChannelScreen extends StatefulWidget {
@@ -16,6 +18,7 @@ class ChannelScreen extends StatefulWidget {
 
 class _ChannelScreenState extends State<ChannelScreen> {
   bool _isLoading = true;
+  AdmobInterstitial interstitialAd;
 
   // Function for loading videos
    _loadMoreVideos() async {
@@ -41,6 +44,8 @@ class _ChannelScreenState extends State<ChannelScreen> {
   @override
   void initState() {
     super.initState();
+    interstitialAd = AdManager.initFullScreenAd(interstitialAd);
+    interstitialAd.load();
     _loadMoreVideos();
   }
 
@@ -58,6 +63,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                           scrollDetails.metrics.pixels ==
                               scrollDetails.metrics.maxScrollExtent) {
                         _loadMoreVideos();
+                        
                       }
                       return false;
                     },
@@ -137,7 +143,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
               ]
                 ),
               ),
-
+              AdManager.largeBannerAdWidget(),
               // 'All Videos' Text
               Container(
                 margin: EdgeInsets.only(left: 20,top: 10,bottom: 10),
@@ -161,10 +167,12 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   crossAxisSpacing: 6.0,
                   crossAxisCount: 2,
                   children: List.generate(widget.channel.videos.length, (index){
-                    return buildVideoChannel(video: widget.channel.videos[index],context: context);
-                  }
-                  ),),
+                     return buildVideoChannel(video: widget.channel.videos[index],context: context,interstitialAd: interstitialAd);
+                    }
+                  ),
+                ),
               ),
+              AdManager.largeBannerAdWidget(),
               SizedBox(height: 30),
             ],),
     ),

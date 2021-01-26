@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Movie{
   int id;
   String title;
@@ -24,4 +22,15 @@ class Movie{
       url: jsonData['url'],
       );
   }
+
+  Map<String,dynamic> toJson() => <String,dynamic>{
+      'id': this.id,
+      'title': this.title,
+      'description': this.description,
+      'category': this.category,
+      'status': this.status,
+      'subtitle': this.subtitle,
+      'posterUrl': this.posterUrl,
+      'url': this.url, 
+  };
 }

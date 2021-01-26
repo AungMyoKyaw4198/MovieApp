@@ -37,7 +37,9 @@ Widget drawerWidget(context){
                 drawerListTile(icon: Icons.radio,name: 'Radio Channels', context: context, routeName: Routes.radio),
                 Divider(color: Colors.grey,),
                 ListTile(
-                  title: Text('version 1.0.0', style: TextStyle(color: Colors.white),)
+                  title: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text('version 1.1.0', style: TextStyle(color: Colors.white),))
                 )
                 ]
               ),

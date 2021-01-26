@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
 import 'package:youTubeApp/components/movies_widgets.dart';
 import 'package:youTubeApp/model/movie.dart';
+import 'package:youTubeApp/services/ads.dart';
 
 class CategoryMovieScreen extends StatefulWidget {
   final List<Movie> movieList;
@@ -27,6 +28,11 @@ class _CategoryMovieScreenState extends State<CategoryMovieScreen> {
                   Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Text("${widget.title} Movies",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),)
+                  ),
+
+                  Align(
+                    alignment: Alignment.center,
+                    child: AdManager.largeBannerAdWidget(),
                   ),
 
                   Container(

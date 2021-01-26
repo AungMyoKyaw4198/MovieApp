@@ -33,7 +33,7 @@ class _VideoScreenState extends State<VideoScreen> {
     List<Video> videos =await widget.favs.readAllFavorites();
     setState(() {
       videoList = videos;
-       if(videoList.any((p) => p.id == video.id)){
+       if(videoList.any((p) => p.title == video.title)){
          isAldyFav = true;
        }
        else{
@@ -126,12 +126,11 @@ class _VideoScreenState extends State<VideoScreen> {
                                       }),
                                       ],),
                           ),
-
                           Container(
                             color: Color(0xff1e2747),
                             height: 20,),
-                            ],
-                        );
+                      ],     
+                    );
                   }
                   ),
             )

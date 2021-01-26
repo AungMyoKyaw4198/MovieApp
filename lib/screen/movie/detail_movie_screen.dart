@@ -1,18 +1,64 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/components/movies_widgets.dart';
+import 'package:youTubeApp/components/widget.dart';
 import 'package:youTubeApp/model/movie.dart';
+import 'package:youTubeApp/model/video.dart';
+import 'package:youTubeApp/services/ads.dart';
+import 'package:youTubeApp/util/favouriteVideos.dart';
+import 'package:youTubeApp/util/objectConverter.dart';
 
 class DetailMovieScreen extends StatefulWidget {
   final Movie movie;
+  final FavoriteVideos favs = FavoriteVideos();
   DetailMovieScreen({this.movie});
+
+
+  // add to favourite list
+  updateFavourite(Movie movie) async {
+    await favs.addFavorite(convertMovieToVideo(movie));
+  }
 
   @override
   _DetailMovieScreenState createState() => _DetailMovieScreenState();
 }
 
 class _DetailMovieScreenState extends State<DetailMovieScreen> {
+  List<Video> videoList = new List();
+  List<Video> videos;
   bool hasMultiParts = false;
+  AdmobInterstitial interstitialAd;
+  bool isAldyFav = false;
+
+  // check whether current video is already favourite or not?
+  loadFavourite(Video video) async {
+    List<Video> videos =await widget.favs.readAllFavorites();
+    setState(() {
+      videoList = videos;
+       if(videoList.any((p) => p.title == video.title)){
+         isAldyFav = true;
+       }
+       else{
+        isAldyFav = false;
+       }
+    });
+  }
+
+
+  @override
+  void initState() { 
+    super.initState();
+    if(widget.movie.url.length >1){
+      setState(() {
+              hasMultiParts = true;
+      });
+    }
+    loadFavourite(convertMovieToVideo(widget.movie));
+    interstitialAd = AdManager.initFullScreenAd(interstitialAd);
+    interstitialAd.load();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,16 +116,15 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
                 
                  SizedBox(height: 5,),
                  hasMultiParts? Container(
-                    height: 70,
-                    child: ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: widget.movie.url.length,
-                      itemBuilder: (BuildContext context, int index){
-                        return Center(
-                          child: watchButton(context, 'Link ${index+1}',widget.movie.url[index].toString() ));
-                    }),
-                  ): watchButton(context, 'Watch', widget.movie.url[0].toString()),
+                     height: 30,
+                     child: ListView.builder(
+                       scrollDirection: Axis.horizontal,
+                       itemCount: widget.movie.url.length,
+                       itemBuilder: (BuildContext context, int index){
+                         return Center(
+                           child: watchButton(context, 'Link ${index+1}',widget.movie.url[index].toString(),interstitialAd ));
+                     }),
+                   ): watchButton(context, 'Watch', widget.movie.url[0].toString(),interstitialAd),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,7 +134,24 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
                         alignment: Alignment.centerLeft,
                         child: Text('Review',style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),),
                       ),
-                      IconButton(icon: Icon(Icons.favorite, color: Colors.red,), onPressed: (){}),
+
+                      // Is already Favourites??
+                      isAldyFav?
+                      IconButton(icon: Icon(Icons.favorite, color: Colors.red,), onPressed: (){
+                      setState(() {
+                        widget.favs.removeFavorite(convertMovieToVideo(widget.movie));
+                        isAldyFav = false;
+                      });
+                      showMessage(context,'Removed from favourite');
+                      }): 
+                      IconButton(icon: Icon(Icons.favorite_border, color: Colors.red,), onPressed: (){
+                      setState(() {
+                        widget.updateFavourite(widget.movie);
+                        isAldyFav = true;
+                      });
+                      showMessage(context,'Added to favourite');
+                      }),
+                  
                   ] 
                 ),
                 Container(

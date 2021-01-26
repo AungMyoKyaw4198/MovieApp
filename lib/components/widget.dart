@@ -1,9 +1,11 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/model/channel.dart';
 import 'package:youTubeApp/model/video.dart';
 import 'package:youTubeApp/screen/channel_screen.dart';
 import 'package:youTubeApp/screen/video_screen.dart';
+import 'package:youTubeApp/services/ads.dart';
 
 Widget buildProfileInfo({Channel channel,context}) {
     return Container(
@@ -90,16 +92,26 @@ Widget channelTitle({Channel channel, context}){
     );
   }
 
-Widget videoListView({Channel channel,context}){
+Widget videoListView({Channel channel,context,AdmobInterstitial interstitialAd}){
   return channel.videos.length!=0?
-        Container(
+        channel.id == 'UCBZWU1iRrtll1QoO9O_rD_w' ?
+            Container(
+              height: 140,
+              child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 3,
+            itemBuilder: (BuildContext context, int index) {
+              return buildVideo(video: channel.videos[index], context: context);
+            },
+          ),
+        )
+        :Container(
           height: 140,
           child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 8,
         itemBuilder: (BuildContext context, int index) {
-          Video video = channel.videos[index];
-          return buildVideo(video: video, context: context);
+          return buildVideo(video: channel.videos[index], context: context, interstitialAd: interstitialAd);
         },
       ),
     ):
@@ -112,14 +124,18 @@ Widget videoListView({Channel channel,context}){
             );
   }
 
-Widget buildVideo({Video video,context}) {
+Widget buildVideo({Video video,context,AdmobInterstitial interstitialAd}) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => VideoScreen(video: video,),
-        ),
-      ),
+      onTap: (){
+        AdManager.loadFullScreenAd(interstitialAd);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => VideoScreen(video: video,),
+          ),
+        );
+      } ,
+        
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
@@ -156,14 +172,18 @@ Widget buildVideo({Video video,context}) {
     );
   }
 
-Widget buildVideoChannel({Video video,context}) {
+Widget buildVideoChannel({Video video,context,AdmobInterstitial interstitialAd}) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => VideoScreen(video: video,),
-        ),
-      ),
+      onTap: (){
+        AdManager.loadFullScreenAd(interstitialAd);            
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => VideoScreen(video: video,),
+          ),
+        );
+      },
+      
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
@@ -200,6 +220,38 @@ Widget buildVideoChannel({Video video,context}) {
       return Flushbar(
          message: message,
                 duration:  Duration(seconds: 3), 
-                // margin: EdgeInsets.only(bottom: 50),             
                 )..show(context);
   }
+
+Widget favVideoListView(String imageUrl,String title,String subTitle){
+  return Container(
+          decoration: BoxDecoration(
+            color: Color(0xff1e2747),
+            borderRadius: BorderRadius.circular(20)),
+          padding: EdgeInsets.symmetric(horizontal:10, vertical: 10),
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical:10),
+          child: Row(children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+           imageUrl,
+            width: 100.0,
+            height: 80,
+            fit: BoxFit.cover,
+          ),
+          ),
+          Expanded(
+            child: Container(
+              padding:  EdgeInsets.only(left: 10),
+              alignment: Alignment.centerLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                Text(title, style: TextStyle(color: Colors.white)),
+                Text(subTitle, style: TextStyle(color: Colors.blue),),
+              ],),
+            ),
+          )
+        ],),
+      );
+}

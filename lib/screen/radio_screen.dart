@@ -1,7 +1,7 @@
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
+import 'package:youTubeApp/services/ads.dart';
 
 class RadioScreen extends StatefulWidget {
   static const String routeName= '/radio';
@@ -13,31 +13,14 @@ class RadioScreen extends StatefulWidget {
 
 class _RadioScreenState extends State<RadioScreen> {
   InAppWebViewController webView;
-  BannerAd myBannerAd;
   
-  BannerAd biuldBannerAd(){
-    return BannerAd(
-      adUnitId: 'ca-app-pub-8107971978330636/6213831627',
-      size: AdSize.banner,
-      listener: (MobileAdEvent event){
-        if (event == MobileAdEvent.loaded){
-          myBannerAd..show();
-        }
-        print("BannerAd $event");
-      },
-    );
-  }
-
   @override
   void initState() {
-    FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-8107971978330636~8056578093');
-    // myBannerAd = biuldBannerAd()..load();
     super.initState();
   }
 
   @override
   void dispose() { 
-    // myBannerAd.dispose();
     super.dispose();
   }
 
@@ -47,24 +30,38 @@ class _RadioScreenState extends State<RadioScreen> {
         backgroundColor: Color(0xff141a32),
           appBar: mainAppBar(),
           drawer: drawerWidget(context),
-          body: Container(
-         child: InAppWebView(
-              initialUrl: 'https://www.myanmartvchannels.com/radio.html',
-              initialHeaders: {},
-              initialOptions: InAppWebViewGroupOptions(
-                crossPlatform: InAppWebViewOptions(
-                  debuggingEnabled: true,
-                  mediaPlaybackRequiresUserGesture : false,
-                  preferredContentMode : UserPreferredContentMode.MOBILE,
+          body: Column(
+            children: <Widget>[
+              Container(
+                height: MediaQuery.of(context).size.height-130,
+              child: InAppWebView(
+                  initialUrl: 'https://www.myanmartvchannels.com/radio.html',
+                  initialHeaders: {},
+                  initialOptions: InAppWebViewGroupOptions(
+                    crossPlatform: InAppWebViewOptions(
+                      debuggingEnabled: true,
+                      mediaPlaybackRequiresUserGesture : false,
+                      preferredContentMode : UserPreferredContentMode.MOBILE,
+                    ),
+                  ),
+                  onWebViewCreated: (InAppWebViewController controller) {
+                    webView = controller;
+                  },
+                  onLoadStart: (InAppWebViewController controller, String url) {},
+                  onLoadStop: (InAppWebViewController controller, String url) {
+                    webView.evaluateJavascript(source: "document.getElementsByClassName('navbar navbar-expand-lg navbar-dark fixed-top bg-primary')[0].style.display='none';");
+                    webView.evaluateJavascript(source: "document.getElementsByClassName('col-12 mb-5')[0].style.display='none';");
+                    webView.evaluateJavascript(source: "document.getElementsByClassName('col-lg-4 order-lg-1')[0].style.display='none';");
+                    webView.evaluateJavascript(source: "document.getElementsByClassName('col-12 mt-2 mb-4')[0].style.display='none';");
+                    webView.evaluateJavascript(source: "document.getElementsByClassName('page-footer bg-dark font-small blue mt-4 pt-4')[0].style.display='none';");
+                    webView.evaluateJavascript(source: "document.getElementsByClassName('plugin chrome webkit win x1 Locale_en_GB')[0].style.display='none';");
+                    
+                  },
                 ),
               ),
-              onWebViewCreated: (InAppWebViewController controller) {
-                webView = controller;
-              },
-              onLoadStart: (InAppWebViewController controller, String url) {},
-              onLoadStop: (InAppWebViewController controller, String url) {},
-            ),
-      ),
+              AdManager.smallBannerAdWidget(),
+            ],
+          ),
     );
   }
 }

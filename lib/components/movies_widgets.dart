@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -5,6 +6,7 @@ import 'package:youTubeApp/model/movie.dart';
 import 'package:youTubeApp/screen/movie/category_movie_screen.dart';
 import 'package:youTubeApp/screen/movie/detail_movie_screen.dart';
 import 'package:youTubeApp/screen/movie/view_movie_screen.dart';
+import 'package:youTubeApp/services/ads.dart';
 
 Widget movieCategories(String imageURL,String title,List<Movie> movieList,context){
   return GestureDetector(
@@ -17,7 +19,6 @@ Widget movieCategories(String imageURL,String title,List<Movie> movieList,contex
           });
           Navigator.push(context, MaterialPageRoute(
           builder: (context)=> CategoryMovieScreen(title: title.toUpperCase(),movieList: searchedMovies,)),);
-
       },
         child: Container(
         child: Stack(
@@ -99,7 +100,6 @@ Widget gridMovie(Movie movie,context){
         Navigator.push(context, MaterialPageRoute(
         builder: (context)=> DetailMovieScreen(movie: movie,)),);
       },
-        child: Container(
         child: Stack(
           children: <Widget>[
             Container(
@@ -108,7 +108,8 @@ Widget gridMovie(Movie movie,context){
               (
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(imageUrl: movie.posterUrl,
-                height: 150,width: 180, fit: BoxFit.fill,
+                       width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.fill,
                 )
               ),
             ),
@@ -139,22 +140,28 @@ Widget gridMovie(Movie movie,context){
             
           ],
           ),
-      ),
     ); 
 }
 
-Widget watchButton(context, buttonText ,videoId,){
+Widget watchButton(context, buttonText ,videoId,AdmobInterstitial interstitialAd){
   return Container(
           margin: EdgeInsets.symmetric(horizontal: 10),
           height: 30,
+          width: 100,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Color(0xffecba1a),
           ),
           child: OutlineButton(
             color: Colors.yellow[700],
-            child: Text(buttonText),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(buttonText),
+                Icon(Icons.play_circle_fill),
+              ]),
             onPressed: (){
+                AdManager.loadFullScreenAd(interstitialAd);
                 Navigator.push(context, MaterialPageRoute(
                 builder: (context)=> ViewMovieScreen(videoId: videoId,)),);
               },

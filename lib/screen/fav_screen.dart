@@ -1,9 +1,16 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
+import 'package:youTubeApp/components/widget.dart';
+import 'package:youTubeApp/model/movie.dart';
 import 'package:youTubeApp/model/video.dart';
 import 'package:youTubeApp/screen/video_screen.dart';
+import 'package:youTubeApp/services/ads.dart';
 import 'package:youTubeApp/util/favouriteVideos.dart';
+import 'package:youTubeApp/util/objectConverter.dart';
+
+import 'movie/detail_movie_screen.dart';
 
 class FavScreen extends StatefulWidget {
   static const String routeName= '/fav';
@@ -15,45 +22,37 @@ class FavScreen extends StatefulWidget {
 }
 
 class _FavScreenState extends State<FavScreen> {
+  AdmobInterstitial interstitialAd;
   BannerAd myBannerAd;
   List<Video> videoList = new List();
+  List<Movie> movieList = new List();
   List<Video> videos;
-
-  BannerAd biuldBannerAd(){
-    return BannerAd(
-      adUnitId: 'ca-app-pub-8107971978330636/6213831627',
-      size: AdSize.banner,
-      listener: (MobileAdEvent event){
-        if (event == MobileAdEvent.loaded){
-          myBannerAd..show();
-        }
-        print("BannerAd $event");
-      },
-    );
-  }
+  List<Movie> movies;
 
   // load favorite videos
   loadFavourite() async {
     List<Video> videos =await widget.favs.readAllFavorites();
     setState(() {
       videoList = videos;
+      movieList = movies;
     });
+  }
+
+  bool isNumeric(String s) {
+  if(s == null) {
+    return false;
+  }
+  return double.parse(s, (e) => null) != null;
   }
 
   @override
   void initState() {
-    FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-8107971978330636~8056578093');
-    // myBannerAd = biuldBannerAd()..load();
     super.initState();
+    interstitialAd = AdManager.initFullScreenAd(interstitialAd);
+    interstitialAd.load();
     loadFavourite();
   }
 
-  @override
-  void dispose() { 
-    // myBannerAd.dispose();
-    super.dispose();
-  }
-  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -67,7 +66,7 @@ class _FavScreenState extends State<FavScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-
+              AdManager.largeBannerAdWidget(),
               // favourite video list
               Container(
                 child: ListView.builder(
@@ -76,49 +75,35 @@ class _FavScreenState extends State<FavScreen> {
                       itemCount: videoList.length,
                       itemBuilder: (BuildContext context, int index){
                           return GestureDetector(
-                            onTap: () =>
-                              Navigator.push(
+                            onTap: () {
+                              AdManager.loadFullScreenAd(interstitialAd);
+                              print(isNumeric(videoList[index].id));
+                              if(isNumeric(videoList[index].id)){
+                                Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => VideoScreen(video: videoList[index],),
+                                  builder: (_) => DetailMovieScreen(movie: convertVideoToMovie(videoList[index]),),
                                 ),
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0xff1e2747),
-                                  borderRadius: BorderRadius.circular(20)),
-                                padding: EdgeInsets.symmetric(horizontal:10, vertical: 10),
-                                margin: EdgeInsets.symmetric(horizontal: 10, vertical:10),
-                                child: Row(children: <Widget>[
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  videoList[index].thumbnailUrl,
-                                  width: 100.0,
-                                  height: 80,
-                                  fit: BoxFit.cover,
-                                ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding:  EdgeInsets.only(left: 10),
-                                    alignment: Alignment.centerLeft,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                      Text(videoList[index].title, style: TextStyle(color: Colors.white)),
-                                      Text(videoList[index].channelTitle, style: TextStyle(color: Colors.blue),),
-                                    ],),
+                                );
+                              }else{
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => VideoScreen(video: videoList[index],),
                                   ),
-                                )
-                              ],),
-                            ),
+                                );
+                              }
+                              },
+                              child: favVideoListView(videoList[index].thumbnailUrl,videoList[index].title,videoList[index].channelTitle),
                         );
                       }
                   ),
-              )
-            ],),)
+              ),
+
+              ],
+            ),)
        ),
     );
   }
 }
+

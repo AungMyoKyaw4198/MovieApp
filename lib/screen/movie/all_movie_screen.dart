@@ -1,11 +1,15 @@
 import 'dart:convert';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
 import 'package:youTubeApp/components/movies_widgets.dart';
 import 'package:youTubeApp/model/category.dart';
 import 'package:youTubeApp/model/movie.dart';
 import 'package:youTubeApp/screen/movie/category_movie_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:youTubeApp/services/ads.dart';
+import 'package:youTubeApp/util/keys.dart';
 
 class AllMoviesScreen extends StatefulWidget {
   static const String routeName= '/movies';
@@ -16,46 +20,110 @@ class AllMoviesScreen extends StatefulWidget {
 }
 
 class _AllMoviesScreenState extends State<AllMoviesScreen> {
+  bool isLoadingCategory = true;
+  bool isLoadingMovie = true;
+  bool isLoading = true;
+  bool hasError = false;
   List<Category> categoryList = new List();
   List<Movie> allMovieList = new List();
+  List<Movie> recomdMovieList = new List();
 
   getMoviesData() async {
-    String data = await DefaultAssetBundle.of(context).loadString("assets/kyiyaaung.json");
-    dynamic jsonResult = json.decode(data);
-    jsonResult.forEach(
-      (value){
-        Movie newMovie = new Movie();
-        newMovie = Movie.fromMap(value);
-        setState(
-          (){
-            allMovieList.add(newMovie);
-          }
-        );
-      }
-    );
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.none) {
+      await http.get('https://aungmyokyaw4198.github.io/KyiyaaungData/kyiyaaung.json').then(
+        (value){
+          dynamic jsonData = jsonDecode(value.body);
+          jsonData.forEach(
+          (value){
+            Movie newMovie = new Movie();
+            newMovie = Movie.fromMap(value);
+            setState(
+              (){
+                allMovieList.add(newMovie);
+                moviesCache.add(newMovie);
+                if(newMovie.status == 'main'){
+                  recomdMovieList.add(newMovie);
+                  recomdMovieListCache.add(newMovie);
+                }
+                }
+              );
+            }
+          );
+        }
+      ).catchError((error){
+        setState(() {
+              hasError = true;
+            });
+        print(error);
+      });
+
+      // Set loading
+      setState(() {
+        isLoadingMovie = false;
+        hasError = false;
+      });
+    } else{
+      setState(() {
+        hasError = true;
+      });
+    }
   }
 
   getCategoriesData() async {
-    String data = await DefaultAssetBundle.of(context).loadString("assets/categories.json");
-    dynamic jsonResult = json.decode(data);
-    jsonResult.forEach(
-      (value){
-        Category cat = new Category();
-        cat = Category.fromMap(value);
-        setState(
-          (){
-            categoryList.add(cat);
-          }
-        );
-      }
-    );
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.none) {
+      await http.get('https://aungmyokyaw4198.github.io/KyiyaaungData/categories.json').then(
+        (value){
+          dynamic jsonData = jsonDecode(value.body);
+          jsonData.forEach(
+            (value){
+              Category cat = new Category();
+              cat = Category.fromMap(value);
+              setState(
+                (){
+                  categoryList.add(cat);
+                  categoryCache.add(cat);
+                }
+              );
+            }
+          );
+        }
+      ).catchError((error){
+        setState(() {
+              hasError = true;
+            });
+        print(error);
+      });
+
+      // Set loading
+      setState(() {
+        isLoadingCategory = false;
+        hasError = false;
+      });
+    } else{
+      setState(() {
+        hasError = true;
+      });
+    }
   }
 
   @override
   void initState() { 
     super.initState();
-    getCategoriesData();
-    getMoviesData();
+    if(moviesCache.length == 0){
+      getCategoriesData();
+      getMoviesData();
+    } else { 
+      setState(() {
+        allMovieList = moviesCache;
+        categoryList = categoryCache;
+        recomdMovieList = recomdMovieListCache;
+        isLoadingMovie = false;
+        isLoadingCategory = false;
+        hasError = false;
+      });
+    }
   }
 
   @override
@@ -64,7 +132,48 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
       backgroundColor: Color(0xff141a32),
       appBar: mainAppBar(),
       drawer: drawerWidget(context),
-      body: SingleChildScrollView(
+      body: hasError ? 
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'assets/error.png',
+                     colorBlendMode: BlendMode.hardLight,
+                  width: 300.0,
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
+            ),
+            SizedBox(height: 20,),
+              Text('Failed to load videos. Please try again!',
+                   style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600),),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Color(0xffecba1a),
+                  ),
+                  child: OutlineButton(
+                    color: Colors.yellow[700],
+                    child: Text("Tap to Retry"),
+                    onPressed: (){
+                      getCategoriesData();
+                      getMoviesData();
+                    },
+                ),
+              ),
+            ],)
+          ):
+      
+        isLoadingMovie ? Center( child: CircularProgressIndicator(),) 
+          :SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,27 +195,32 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
               // Show Recommended Movies
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  child: Text('Recommended Movies',style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),)
+                  child: Text('Recommended Movies',style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 20),)
                   ),
                 Container(
                 height: 210,
+                margin: EdgeInsets.only(bottom: 20),
                 child: ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   scrollDirection: Axis.horizontal,
-                  itemCount: 10,
+                  itemCount: recomdMovieList.length,
                   itemBuilder: (BuildContext context, int index){
                     return Center(
-                      child: recommendMovie(allMovieList[index],context));
+                      child: recommendMovie(recomdMovieList[index],context));
                 }),
               ),
 
+              Align(
+                alignment: Alignment.center,
+                child: AdManager.largeBannerAdWidget(),
+              ),
               SizedBox(height: 10,),
               Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                        Text('All Movies',style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15),),
+                        Text('All Movies',style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 20),),
                         Container(
                           height: 30,
                           decoration: BoxDecoration(
@@ -139,7 +253,9 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                   }
                   ),),
               ),
-
+              Align(
+                child: AdManager.smallBannerAdWidget(),
+              ),
             ],
             ),
           ),

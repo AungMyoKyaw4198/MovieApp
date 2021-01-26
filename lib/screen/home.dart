@@ -4,9 +4,11 @@ import 'package:flutter/rendering.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
 import 'package:youTubeApp/components/widget.dart';
 import 'package:youTubeApp/model/channel.dart';
+import 'package:youTubeApp/services/ads.dart';
 import 'package:youTubeApp/services/api_service.dart';
 import 'package:youTubeApp/util/keys.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:admob_flutter/admob_flutter.dart';
 
 class Home extends StatefulWidget {
   static const String routeName= '/home';
@@ -17,28 +19,14 @@ class Home extends StatefulWidget {
 
 class _HomeScreenState extends State<Home> {
   BannerAd myBannerAd;
+  AdmobInterstitial interstitialAd;
   List<Channel> channels = new List();
   Channel channel;
   bool errorExist = false;
   bool isLoading = true;
 
-  BannerAd biuldBannerAd(){
-    return BannerAd(
-      adUnitId: 'ca-app-pub-8107971978330636/6213831627',
-      size: AdSize.banner,
-      listener: (MobileAdEvent event){
-        if (event == MobileAdEvent.loaded){
-          myBannerAd..show();
-        }
-        print("BannerAd $event");
-      },
-    );
-  }
-
   @override
   void initState() {
-    FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-8107971978330636~8056578093');
-    // myBannerAd = biuldBannerAd()..load();
     super.initState();
 
     // if there is not cache,load videos.
@@ -51,12 +39,8 @@ class _HomeScreenState extends State<Home> {
         errorExist = false;
       });
     }
-  }
-
-  @override
-  void dispose() { 
-    // myBannerAd.dispose();
-    super.dispose();
+    interstitialAd = AdManager.initFullScreenAd(interstitialAd);
+    interstitialAd.load();
   }
 
   // get videos from the api
@@ -75,7 +59,7 @@ class _HomeScreenState extends State<Home> {
             channelCache.add(channel);
 
             // For error handling, check loading is finished? and is error exist?
-            if(i == 7){
+            if(i == channelIDs.length-1){
               isLoading = false;
               if(channelCache.length == 0){
                 errorExist = true;
@@ -156,22 +140,28 @@ class _HomeScreenState extends State<Home> {
                 }),
               ),
 
+              AdManager.largeBannerAdWidget(),
+
               // Show videos container
               Container(
-                child: ListView.builder(
+                child: ListView.separated(
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
                   itemCount: channels.length,
+                  separatorBuilder: (BuildContext context, int index){
+                    return (index != 0 && index % 5 == 0) ? AdManager.largeBannerAdWidget(): SizedBox.shrink();
+                  },
                   itemBuilder: (BuildContext context, int index){
                                  return Column(
                                    children:<Widget>[
                                      channelTitle(channel:channels[index], context: context),
-                                     videoListView(channel: channels[index],context: context),
+                                     videoListView(channel: channels[index],context: context,interstitialAd: interstitialAd),
                                      SizedBox(height: 15),
                                    ]
                                  );
                 }),
               ),
+            AdManager.largeBannerAdWidget(),
             ],
             ),
           )

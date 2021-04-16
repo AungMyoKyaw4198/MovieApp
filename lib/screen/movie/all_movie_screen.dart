@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
 import 'package:youTubeApp/components/movies_widgets.dart';
@@ -24,9 +26,9 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
   bool isLoadingMovie = true;
   bool isLoading = true;
   bool hasError = false;
-  List<Category> categoryList = new List();
-  List<Movie> allMovieList = new List();
-  List<Movie> recomdMovieList = new List();
+  List<Category> categoryList = [];
+  List<Movie> allMovieList = [];
+  List<Movie> recomdMovieList = [];
 
   getMoviesData() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -108,9 +110,24 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
     }
   }
 
+  getAdUnitIds() async {
+    await Firebase.initializeApp();
+    if(appUnitId == ''){
+      await FirebaseFirestore.instance.collection('AdUnitIDs').doc('doSzg6aET525FH6V3dn6').get().then(
+        (doc){
+        appUnitId = doc.data()['appId'].toString();
+        bannerAdId = doc.data()['bannerAdUnitId'].toString();
+        fullScreenAdId = doc.data()['fullScreenAdUnitId'].toString();
+        }
+      );
+    }
+  }
+
   @override
   void initState() { 
     super.initState();
+    getAdUnitIds();
+
     if(moviesCache.length == 0){
       getCategoriesData();
       getMoviesData();
@@ -160,6 +177,7 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: Color(0xffecba1a),
                   ),
+                  // ignore: deprecated_member_use
                   child: OutlineButton(
                     color: Colors.yellow[700],
                     child: Text("Tap to Retry"),
@@ -227,6 +245,7 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xffecba1a),
                           ),
+                          // ignore: deprecated_member_use
                           child: OutlineButton(
                             color: Colors.yellow[700],
                             child: Text("See All"),

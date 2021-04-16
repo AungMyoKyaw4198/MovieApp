@@ -78,9 +78,8 @@ Widget channelTitle({Channel channel, context}){
             color: Color(0xffecba1a),
           ),
           
-            child: OutlineButton(
-              color: Colors.yellow[700],
-            child: Text("See All"),
+            child: OutlinedButton(
+            child: Text("See All",style: TextStyle(color: Colors.black),),
             onPressed: (){
                 Navigator.push(context, MaterialPageRoute(
                 builder: (context)=> ChannelScreen(channel: channel)),);

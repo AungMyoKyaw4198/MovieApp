@@ -39,13 +39,13 @@ class FavouriteStorage {
       // Read the file
       String jsonString = await file.readAsString();
       Iterable jsonMap = jsonDecode(jsonString);
-      List favs = jsonMap.map((parsedJson) => Video.fromJson(parsedJson)).toList();
+      List<Video> favs = jsonMap.map((parsedJson) => Video.fromJson(parsedJson)).toList();
       return favs;
  
     } catch (e) {
       print('error');
     }
  
-    return List();
+    // return List();
   }
 }

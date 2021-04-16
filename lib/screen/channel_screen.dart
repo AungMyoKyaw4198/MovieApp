@@ -129,9 +129,8 @@ class _ChannelScreenState extends State<ChannelScreen> {
                           borderRadius: BorderRadius.circular(10),
                           color: Color(0xffecba1a),
                         ),
-                          child: OutlineButton(
-                          color: Colors.yellow[700],
-                          child: Text("Watch on Youtube"),
+                          child: OutlinedButton(
+                          child: Text("Watch on Youtube",style: TextStyle(color: Colors.black)),
                           onPressed: (){
                              _launchURL(context,'https://www.youtube.com/channel/${widget.channel.id}');
                           },

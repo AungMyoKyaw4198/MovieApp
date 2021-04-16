@@ -24,8 +24,8 @@ class FavScreen extends StatefulWidget {
 class _FavScreenState extends State<FavScreen> {
   AdmobInterstitial interstitialAd;
   BannerAd myBannerAd;
-  List<Video> videoList = new List();
-  List<Movie> movieList = new List();
+  List<Video> videoList = [];
+  List<Movie> movieList = [];
   List<Video> videos;
   List<Movie> movies;
 
@@ -42,6 +42,7 @@ class _FavScreenState extends State<FavScreen> {
   if(s == null) {
     return false;
   }
+  // ignore: deprecated_member_use
   return double.parse(s, (e) => null) != null;
   }
 

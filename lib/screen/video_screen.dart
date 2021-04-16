@@ -22,7 +22,7 @@ class VideoScreen extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoScreen> {
-  List<Video> videoList = new List();
+  List<Video> videoList = [];
   YoutubePlayerController _controller;
   List<Video> videos;
   bool isAldyFav = false;
@@ -99,6 +99,7 @@ class _VideoScreenState extends State<VideoScreen> {
                               child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
+                                  // ignore: deprecated_member_use
                                   FlatButton(
                                     child: Text(widget.video.channelTitle, style: TextStyle(
                                             color: Colors.blue,

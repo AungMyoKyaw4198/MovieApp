@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         Routes.channel: (context) => TvChannel(),
         Routes.favVideo: (context) => FavScreen(),
         Routes.radio: (context) => RadioScreen(),
-         Routes.movies: (context) => AllMoviesScreen(),
+        Routes.movies: (context) => AllMoviesScreen(),
       },
     );
   }

@@ -25,7 +25,7 @@ class DetailMovieScreen extends StatefulWidget {
 }
 
 class _DetailMovieScreenState extends State<DetailMovieScreen> {
-  List<Video> videoList = new List();
+  List<Video> videoList = [];
   List<Video> videos;
   bool hasMultiParts = false;
   AdmobInterstitial interstitialAd;

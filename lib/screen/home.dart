@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -9,6 +11,7 @@ import 'package:youTubeApp/services/api_service.dart';
 import 'package:youTubeApp/util/keys.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   static const String routeName= '/home';
@@ -20,7 +23,7 @@ class Home extends StatefulWidget {
 class _HomeScreenState extends State<Home> {
   BannerAd myBannerAd;
   AdmobInterstitial interstitialAd;
-  List<Channel> channels = new List();
+  List<Channel> channels = [];
   Channel channel;
   bool errorExist = false;
   bool isLoading = true;
@@ -31,6 +34,7 @@ class _HomeScreenState extends State<Home> {
 
     // if there is not cache,load videos.
     if(channelCache.length == 0){
+      print('channel caching');
       getVideos();
     } else { 
       setState(() {
@@ -44,31 +48,39 @@ class _HomeScreenState extends State<Home> {
   }
 
   // get videos from the api
-  Future getVideos() async {
+  getVideos() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     isLoading = true;
     errorExist = false;
     // Check if connection exist
     if (connectivityResult != ConnectivityResult.none) {
-        for(int i=0; i<channelIDs.length; i++){
-          channel = new Channel();
-          channel = await APIService.instance
-            .fetchChannel(channelId: channelIDs[i]);
-          setState(() {
-            channels.add(channel);
-            channelCache.add(channel);
-
-            // For error handling, check loading is finished? and is error exist?
-            if(i == channelIDs.length-1){
-              isLoading = false;
-              if(channelCache.length == 0){
-                errorExist = true;
-              }else{
-                errorExist = false;
-              }
+      await http.get('https://aungmyokyaw4198.github.io/KyiyaaungData/youtubechannels.json').then(
+        (value){
+          dynamic jsonData = jsonDecode(value.body);
+          jsonData.forEach(
+            (value) async {
+              channel = new Channel();
+              channel = await APIService.instance
+                .fetchChannel(channelId: value.toString());
+              setState(() {
+                  channels.add(channel);
+                  channelCache.add(channel);
+                  print(channel.id);              
+                });
             }
-          });
+          );
         }
+      ).catchError((error){
+        setState(() {
+          errorExist = true;
+        });
+        print(error);
+      });
+
+      // After loading is finished
+      setState(() {
+          isLoading = false;   
+        });
     } else{
       setState(() {
         errorExist = true;
@@ -112,9 +124,8 @@ class _HomeScreenState extends State<Home> {
                     borderRadius: BorderRadius.circular(10),
                     color: Color(0xffecba1a),
                   ),
-                  child: OutlineButton(
-                    color: Colors.yellow[700],
-                    child: Text("Tap to Retry"),
+                  child: OutlinedButton(
+                    child: Text("Tap to Retry",style: TextStyle(color: Colors.black),),
                     onPressed: (){
                       getVideos();
                     },
@@ -140,7 +151,7 @@ class _HomeScreenState extends State<Home> {
                 }),
               ),
 
-              AdManager.largeBannerAdWidget(),
+               AdManager.largeBannerAdWidget(),
 
               // Show videos container
               Container(
@@ -161,7 +172,7 @@ class _HomeScreenState extends State<Home> {
                                  );
                 }),
               ),
-            AdManager.largeBannerAdWidget(),
+             AdManager.largeBannerAdWidget(),
             ],
             ),
           )

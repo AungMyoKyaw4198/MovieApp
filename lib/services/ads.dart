@@ -1,20 +1,26 @@
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youTubeApp/util/keys.dart';
 
 class AdManager {
   BannerAd myBannerAd;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   static String appId() {
-    return 'ca-app-pub-8107971978330636~8056578093';
+    // return 'ca-app-pub-8107971978330636~8056578093';
+    return appUnitId;
   }
 
   static String bannerAdUnitId() {
-    return 'ca-app-pub-8107971978330636/6213831627';
+    // return 'ca-app-pub-8107971978330636/6213831627';
+    return bannerAdId;
   }
 
    static String fullScreenAdUnitId() {
-    return 'ca-app-pub-8107971978330636/7638467629';
+    // return 'ca-app-pub-8107971978330636/7638467629';
+    return fullScreenAdId;
   }
 
   static Future<void> loadFullScreenAd(AdmobInterstitial interstitialAd) async {

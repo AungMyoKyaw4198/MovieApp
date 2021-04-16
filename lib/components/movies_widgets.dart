@@ -11,7 +11,7 @@ import 'package:youTubeApp/services/ads.dart';
 Widget movieCategories(String imageURL,String title,List<Movie> movieList,context){
   return GestureDetector(
       onTap: () {
-          List<Movie> searchedMovies = new List();
+          List<Movie> searchedMovies = [];
           movieList.forEach((value){
             if(value.category == title){
               searchedMovies.add(value);
@@ -152,13 +152,13 @@ Widget watchButton(context, buttonText ,videoId,AdmobInterstitial interstitialAd
             borderRadius: BorderRadius.circular(10),
             color: Color(0xffecba1a),
           ),
-          child: OutlineButton(
-            color: Colors.yellow[700],
+          child: OutlinedButton(
+            // color: Colors.yellow[700],
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(buttonText),
-                Icon(Icons.play_circle_fill),
+                Text(buttonText,style: TextStyle(color: Colors.black),),
+                Icon(Icons.play_circle_fill,color: Colors.black,),
               ]),
             onPressed: (){
                 AdManager.loadFullScreenAd(interstitialAd);

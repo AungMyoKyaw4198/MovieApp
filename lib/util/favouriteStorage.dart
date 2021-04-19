@@ -46,6 +46,7 @@ class FavouriteStorage {
       print('error');
     }
  
-    // return List();
+    // ignore: deprecated_member_use
+    return List();
   }
 }

@@ -1,5 +1,7 @@
 import 'package:admob_flutter/admob_flutter.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/model/channel.dart';
 import 'package:youTubeApp/model/video.dart';
@@ -232,12 +234,11 @@ Widget favVideoListView(String imageUrl,String title,String subTitle){
           child: Row(children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-          child: Image.network(
-           imageUrl,
-            width: 100.0,
-            height: 80,
-            fit: BoxFit.cover,
-          ),
+            child: CachedNetworkImage(imageUrl: imageUrl,
+                      width: 100.0,
+                      height: 80,
+                      fit: BoxFit.cover,
+                )
           ),
           Expanded(
             child: Container(

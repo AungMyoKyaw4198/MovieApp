@@ -29,6 +29,7 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
   List<Category> categoryList = [];
   List<Movie> allMovieList = [];
   List<Movie> recomdMovieList = [];
+  List<Movie> newMovieList = [];
 
   getMoviesData() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -46,7 +47,7 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                 moviesCache.add(newMovie);
                 if(newMovie.status == 'main'){
                   recomdMovieList.add(newMovie);
-                  recomdMovieListCache.add(newMovie);
+                  // recomdMovieListCache.add(newMovie);
                 }
                 }
               );
@@ -64,6 +65,10 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
       setState(() {
         isLoadingMovie = false;
         hasError = false;
+        newMovieList = new List.from(allMovieList.reversed);
+        newMovieListCache = newMovieList;
+        recomdMovieList.shuffle();
+        recomdMovieListCache = recomdMovieList;
       });
     } else{
       setState(() {
@@ -136,6 +141,7 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
         allMovieList = moviesCache;
         categoryList = categoryCache;
         recomdMovieList = recomdMovieListCache;
+        newMovieList = newMovieListCache;
         isLoadingMovie = false;
         isLoadingCategory = false;
         hasError = false;
@@ -228,6 +234,24 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                 }),
               ),
 
+              // Show New Movies
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: Text('New Arrivals',style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 20),)
+                  ),
+                Container(
+                height: 210,
+                margin: EdgeInsets.only(bottom: 20),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 15,
+                  itemBuilder: (BuildContext context, int index){
+                    return Center(
+                      child: recommendMovie(newMovieList[index],context));
+                }),
+              ),
+
               Align(
                 alignment: Alignment.center,
                 child: AdManager.largeBannerAdWidget(),
@@ -280,4 +304,11 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
           ),
     );
   }
+
+  @override
+    void dispose() {
+      print('__________________________________Dispose allMovies Screen');
+      super.dispose();
+    }
+
 }

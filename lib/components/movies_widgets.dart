@@ -54,6 +54,7 @@ Widget recommendMovie(Movie movie,context){
         builder: (context)=> DetailMovieScreen(movie: movie)),);
       },
         child: Container(
+          width: 190,
           margin: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
@@ -68,7 +69,7 @@ Widget recommendMovie(Movie movie,context){
               (
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(imageUrl: movie.posterUrl,
-                height: 150,width: 180, fit: BoxFit.fill,
+                height: 150,width: 180, fit: BoxFit.cover,
                 )
               ),
             ),
@@ -76,7 +77,7 @@ Widget recommendMovie(Movie movie,context){
               color: Colors.transparent,
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
               alignment: Alignment.centerLeft,
-              child: Text(movie.title,style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),),
+              child: Text(movie.title,style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),overflow: TextOverflow.ellipsis,),
             ),
             Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
@@ -107,6 +108,7 @@ Widget gridMovie(Movie movie,context){
               child: ClipRRect
               (
                 borderRadius: BorderRadius.circular(8),
+                // child: Image.network(movie.posterUrl,fit: BoxFit.fill,width: MediaQuery.of(context).size.width,)
                 child: CachedNetworkImage(imageUrl: movie.posterUrl,
                        width: MediaQuery.of(context).size.width,
                         fit: BoxFit.fill,

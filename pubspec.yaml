@@ -24,7 +24,7 @@ dependencies:
   firebase_admob: ^0.10.2
   url_launcher: ^5.7.10
   flutter_inappwebview: ^4.0.0
-  flushbar: ^1.10.4
+  another_flushbar: ^1.10.5
   path_provider: ^1.6.24
   http: ^0.12.2
   youtube_player_flutter: ^7.0.0+7

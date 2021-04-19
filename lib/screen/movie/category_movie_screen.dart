@@ -14,6 +14,14 @@ class CategoryMovieScreen extends StatefulWidget {
 }
 
 class _CategoryMovieScreenState extends State<CategoryMovieScreen> {
+  List<Movie>randomMovieList = [];
+  @override
+  void initState() { 
+    super.initState();
+    setState(() {
+          widget.movieList.shuffle();
+        });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,5 +62,11 @@ class _CategoryMovieScreenState extends State<CategoryMovieScreen> {
         ),
       )
     );
+  }
+
+  @override
+  void dispose() { 
+    print('____________CategoryMovie Dispose');
+    super.dispose();
   }
 }

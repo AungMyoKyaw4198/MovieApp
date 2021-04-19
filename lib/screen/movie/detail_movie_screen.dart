@@ -68,6 +68,16 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
                 title: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      // Expanded(
+                      //   flex: 2,
+                      //   child: Align(
+                      //     alignment: Alignment.centerLeft,
+                      //     child: IconButton(icon: Icon(Icons.arrow_back,), onPressed: (){
+                      //       Navigator.pushReplacement(context, MaterialPageRoute(
+                      //       builder: (context)=> AllMoviesScreen()),);
+                      //     },alignment: Alignment.centerLeft,),
+                      //   ),
+                      // ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
@@ -75,10 +85,10 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         margin: EdgeInsets.symmetric(horizontal: 8),
-                        width: 100,
+                        // width: 150,
                         height: 30,
                         alignment: Alignment.center,
-                        child: Text(widget.movie.category,style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontSize: 18),),
+                        child: Text(widget.movie.category,style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontSize: 18),overflow: TextOverflow.visible,),
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -167,4 +177,10 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
       )
     );
   }
+
+  @override
+    void dispose() {
+      print('________________________Dispose Detail Movie Screen');
+      super.dispose();
+    }
 }

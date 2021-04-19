@@ -9,6 +9,7 @@ List<Channel> channelCache = [];
 List<Category> categoryCache = [];
 List<Movie> moviesCache = [];
 List<Movie> recomdMovieListCache = [];
+List<Movie> newMovieListCache = [];
 String appUnitId = '';
 String bannerAdId = '';
 String fullScreenAdId= '';

@@ -93,7 +93,7 @@ class _HomeScreenState extends State<Home> {
     return Scaffold(
       backgroundColor: Color(0xff141a32),
       appBar: mainAppBar(),
-      drawer: drawerWidget(context),
+      drawer: DrawerWidget(context),
       body: errorExist ? 
 
           // Show error image
@@ -147,7 +147,7 @@ class _HomeScreenState extends State<Home> {
                   scrollDirection: Axis.horizontal,
                   itemCount: channels.length,
                   itemBuilder: (BuildContext context, int index){
-                                 return buildProfileInfo(channel: channels[index],context: context);
+                                 return BuildProfileInfoWidget(channel: channels[index],context: context);
                 }),
               ),
 
@@ -165,8 +165,8 @@ class _HomeScreenState extends State<Home> {
                   itemBuilder: (BuildContext context, int index){
                                  return Column(
                                    children:<Widget>[
-                                     channelTitle(channel:channels[index], context: context),
-                                     videoListView(channel: channels[index],context: context,interstitialAd: interstitialAd),
+                                     ChannelTitleWidget(channel:channels[index], context: context),
+                                     VideoListViewWidget(channel: channels[index],context: context,interstitialAd: interstitialAd),
                                      SizedBox(height: 15),
                                    ]
                                  );

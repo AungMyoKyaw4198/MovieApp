@@ -1,6 +1,4 @@
 import 'package:admob_flutter/admob_flutter.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:flushbar/flushbar.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/model/channel.dart';
@@ -9,7 +7,13 @@ import 'package:youTubeApp/screen/channel_screen.dart';
 import 'package:youTubeApp/screen/video_screen.dart';
 import 'package:youTubeApp/services/ads.dart';
 
-Widget buildProfileInfo({Channel channel,context}) {
+class BuildProfileInfoWidget extends StatelessWidget {
+  final Channel channel;
+  final BuildContext context;
+  const BuildProfileInfoWidget({this.channel,this.context});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(5.0),
       padding: EdgeInsets.all(5.0),
@@ -51,8 +55,15 @@ Widget buildProfileInfo({Channel channel,context}) {
       ),
     );
   }
+}
 
-Widget channelTitle({Channel channel, context}){
+class ChannelTitleWidget extends StatelessWidget {
+  final Channel channel;
+  final BuildContext context;
+  const ChannelTitleWidget({this.channel, this.context});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Row(
@@ -92,9 +103,18 @@ Widget channelTitle({Channel channel, context}){
         ),
     );
   }
+}
 
-Widget videoListView({Channel channel,context,AdmobInterstitial interstitialAd}){
-  return channel.videos.length!=0?
+class VideoListViewWidget extends StatelessWidget {
+  final Channel channel;
+  final BuildContext context;
+  final AdmobInterstitial interstitialAd;
+
+  const VideoListViewWidget({this.channel,this.context,this.interstitialAd});
+
+  @override
+  Widget build(BuildContext context) {
+    return channel.videos.length!=0?
         channel.id == 'UCBZWU1iRrtll1QoO9O_rD_w' ?
             Container(
               height: 140,
@@ -102,7 +122,7 @@ Widget videoListView({Channel channel,context,AdmobInterstitial interstitialAd})
             scrollDirection: Axis.horizontal,
             itemCount: 3,
             itemBuilder: (BuildContext context, int index) {
-              return buildVideo(video: channel.videos[index], context: context);
+              return BuildVideoWidget(video: channel.videos[index], context: context);
             },
           ),
         )
@@ -112,7 +132,7 @@ Widget videoListView({Channel channel,context,AdmobInterstitial interstitialAd})
         scrollDirection: Axis.horizontal,
         itemCount: 8,
         itemBuilder: (BuildContext context, int index) {
-          return buildVideo(video: channel.videos[index], context: context, interstitialAd: interstitialAd);
+          return BuildVideoWidget(video: channel.videos[index], context: context, interstitialAd: interstitialAd);
         },
       ),
     ):
@@ -124,8 +144,16 @@ Widget videoListView({Channel channel,context,AdmobInterstitial interstitialAd})
               ),
             );
   }
+}
 
-Widget buildVideo({Video video,context,AdmobInterstitial interstitialAd}) {
+class BuildVideoWidget extends StatelessWidget {
+  final Video video;
+  final BuildContext context;
+  final AdmobInterstitial interstitialAd;
+  const BuildVideoWidget({this.video,this.context,this.interstitialAd});
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
         AdManager.loadFullScreenAd(interstitialAd);
@@ -172,8 +200,16 @@ Widget buildVideo({Video video,context,AdmobInterstitial interstitialAd}) {
       ),
     );
   }
+}
 
-Widget buildVideoChannel({Video video,context,AdmobInterstitial interstitialAd}) {
+class BuildVideoChannelWidget extends StatelessWidget {
+  final Video video;
+  final BuildContext context;
+  final AdmobInterstitial interstitialAd;
+  const BuildVideoChannelWidget({this.video,this.context,this.interstitialAd});
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
         AdManager.loadFullScreenAd(interstitialAd);            
@@ -216,16 +252,31 @@ Widget buildVideoChannel({Video video,context,AdmobInterstitial interstitialAd})
       ),
     );
   }
+}
 
- Widget showMessage(BuildContext context,String message){
-      return Flushbar(
+class ShowMessageWidget extends StatelessWidget {
+  final BuildContext context;
+  final String message;
+  const ShowMessageWidget(this.context,this.message);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flushbar(
          message: message,
                 duration:  Duration(seconds: 3), 
                 )..show(context);
   }
+}
 
-Widget favVideoListView(String imageUrl,String title,String subTitle){
-  return Container(
+class FavVideoListViewWidget extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final String subTitle;
+  const FavVideoListViewWidget(this.imageUrl,this.title,this.subTitle);
+
+  @override
+  Widget build(BuildContext context) {
+     return Container(
           decoration: BoxDecoration(
             color: Color(0xff1e2747),
             borderRadius: BorderRadius.circular(20)),
@@ -234,11 +285,7 @@ Widget favVideoListView(String imageUrl,String title,String subTitle){
           child: Row(children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: CachedNetworkImage(imageUrl: imageUrl,
-                      width: 100.0,
-                      height: 80,
-                      fit: BoxFit.cover,
-                )
+            child: Image.network(imageUrl,height: 80,width: 100, fit: BoxFit.cover,cacheHeight: 200,cacheWidth: 200,),
           ),
           Expanded(
             child: Container(
@@ -254,4 +301,5 @@ Widget favVideoListView(String imageUrl,String title,String subTitle){
           )
         ],),
       );
+  }
 }

@@ -63,7 +63,7 @@ class _FavScreenState extends State<FavScreen> {
               backgroundColor: Colors.transparent,
               title: Text('Favourite Videos'),
             ),
-        drawer: drawerWidget(context),
+        drawer: DrawerWidget(context),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -78,7 +78,7 @@ class _FavScreenState extends State<FavScreen> {
                           return GestureDetector(
                             onTap: () {
                               AdManager.loadFullScreenAd(interstitialAd);
-                              print(isNumeric(videoList[index].id));
+                              // print(isNumeric(videoList[index].id));
                               if(isNumeric(videoList[index].id)){
                                 Navigator.push(
                                 context,
@@ -95,7 +95,7 @@ class _FavScreenState extends State<FavScreen> {
                                 );
                               }
                               },
-                              child: favVideoListView(videoList[index].thumbnailUrl,videoList[index].title,videoList[index].channelTitle),
+                              child: FavVideoListViewWidget(videoList[index].thumbnailUrl,videoList[index].title,videoList[index].channelTitle),
                         );
                       }
                   ),

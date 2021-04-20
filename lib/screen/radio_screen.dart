@@ -29,7 +29,7 @@ class _RadioScreenState extends State<RadioScreen> {
         return Scaffold(
         backgroundColor: Color(0xff141a32),
           appBar: mainAppBar(),
-          drawer: drawerWidget(context),
+          drawer: DrawerWidget(context),
           body: Column(
             children: <Widget>[
               Container(

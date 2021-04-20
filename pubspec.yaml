@@ -28,7 +28,6 @@ dependencies:
   path_provider: ^1.6.24
   http: ^0.12.2
   youtube_player_flutter: ^7.0.0+7
-  cached_network_image: ^2.3.3
   connectivity: ^2.0.2
   admob_flutter: ^1.0.1
   firebase_core: ^0.5.0

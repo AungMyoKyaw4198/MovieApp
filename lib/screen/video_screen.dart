@@ -116,14 +116,14 @@ class _VideoScreenState extends State<VideoScreen> {
                                             widget.favs.removeFavorite(widget.video);
                                             isAldyFav = false;
                                           });
-                                          showMessage(context,'Removed from favourite');
+                                          ShowMessageWidget(context,'Removed from favourite');
                                           }): 
                                           IconButton(icon: Icon(Icons.favorite_border, color: Colors.red,), onPressed: (){
                                       setState(() {
                                         widget.updateFavourite(widget.video);
                                         isAldyFav = true;
                                       });
-                                      showMessage(context,'Added to favourite');
+                                      ShowMessageWidget(context,'Added to favourite');
                                       }),
                                       ],),
                           ),

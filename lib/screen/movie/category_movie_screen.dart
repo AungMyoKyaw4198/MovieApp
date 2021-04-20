@@ -52,7 +52,7 @@ class _CategoryMovieScreenState extends State<CategoryMovieScreen> {
                       crossAxisSpacing: 10.0,
                       crossAxisCount: 3,
                       children: List.generate(widget.movieList.length, (index){
-                        return gridMovie(widget.movieList[index],context);
+                        return GridMovieWidget(widget.movieList[index],context);
                       }
                     ),
                   ),

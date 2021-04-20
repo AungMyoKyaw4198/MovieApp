@@ -1,54 +1,68 @@
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:youTubeApp/model/movie.dart';
 import 'package:youTubeApp/screen/movie/category_movie_screen.dart';
 import 'package:youTubeApp/screen/movie/detail_movie_screen.dart';
 import 'package:youTubeApp/screen/movie/view_movie_screen.dart';
 import 'package:youTubeApp/services/ads.dart';
 
-Widget movieCategories(String imageURL,String title,List<Movie> movieList,context){
-  return GestureDetector(
-      onTap: () {
-          List<Movie> searchedMovies = [];
-          movieList.forEach((value){
-            if(value.category == title){
-              searchedMovies.add(value);
-            }
-          });
-          Navigator.push(context, MaterialPageRoute(
-          builder: (context)=> CategoryMovieScreen(title: title.toUpperCase(),movieList: searchedMovies,)),);
-      },
-        child: Container(
-        child: Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 5),
-              child: ClipRRect
-              (
-                borderRadius: BorderRadius.circular(8),
-                child: CachedNetworkImage(imageUrl: imageURL,
-                height: 50,width: 100, fit: BoxFit.cover,)
-              ),
+
+class MovieCategoriesWidget extends StatelessWidget {
+  final String imageURL;
+  final String title;
+  final List<Movie> movieList;
+  final BuildContext context;
+  const MovieCategoriesWidget(this.imageURL,this.title,this.movieList,this.context);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+    onTap: () {
+        List<Movie> searchedMovies = [];
+        movieList.forEach((value){
+          if(value.category == title){
+            searchedMovies.add(value);
+          }
+        });
+        Navigator.push(context, MaterialPageRoute(
+        builder: (context)=> CategoryMovieScreen(title: title.toUpperCase(),movieList: searchedMovies,)),);
+    },
+      child: Container(
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            child: ClipRRect
+            (
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(imageURL,fit: BoxFit.cover,height: 50,width: 100,cacheHeight: 200,cacheWidth: 200,)
             ),
-            Container(
-              decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.black45,
-                        ),
-              margin: EdgeInsets.symmetric(horizontal: 5),
-              height: 50,width: 100,
-              alignment: Alignment.center,
-              child: Text(title.toUpperCase(),style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),),
-              )
-          ],),
-      ),
-    ); 
+          ),
+          Container(
+            decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.black45,
+                      ),
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            height: 50,width: 100,
+            alignment: Alignment.center,
+            child: Text(title.toUpperCase(),style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),),
+            )
+        ],),
+    ),
+    );
+  }
 }
 
-Widget recommendMovie(Movie movie,context){
-  return GestureDetector(
+class RecomdMoviesWidget extends StatelessWidget {
+  final Movie movie;
+  final BuildContext context;
+  const RecomdMoviesWidget(this.movie,this.context);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(
         builder: (context)=> DetailMovieScreen(movie: movie)),);
@@ -68,9 +82,7 @@ Widget recommendMovie(Movie movie,context){
               child: ClipRRect
               (
                 borderRadius: BorderRadius.circular(8),
-                child: CachedNetworkImage(imageUrl: movie.posterUrl,
-                height: 150,width: 180, fit: BoxFit.cover,
-                )
+                child: Image.network(movie.posterUrl,height: 150,width: 180, fit: BoxFit.cover,cacheHeight: 200,cacheWidth: 200,)
               ),
             ),
             Container(
@@ -93,10 +105,17 @@ Widget recommendMovie(Movie movie,context){
           ),
       ),
     ); 
+  }
 }
 
-Widget gridMovie(Movie movie,context){
-  return GestureDetector(
+class GridMovieWidget extends StatelessWidget {
+  final Movie movie;
+  final BuildContext context;
+  const GridMovieWidget(this.movie,this.context);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(
         builder: (context)=> DetailMovieScreen(movie: movie,)),);
@@ -108,11 +127,7 @@ Widget gridMovie(Movie movie,context){
               child: ClipRRect
               (
                 borderRadius: BorderRadius.circular(8),
-                // child: Image.network(movie.posterUrl,fit: BoxFit.fill,width: MediaQuery.of(context).size.width,)
-                child: CachedNetworkImage(imageUrl: movie.posterUrl,
-                       width: MediaQuery.of(context).size.width,
-                        fit: BoxFit.fill,
-                )
+                child: Image.network(movie.posterUrl,fit: BoxFit.fill,width: MediaQuery.of(context).size.width,cacheHeight: 200,cacheWidth: 200,)
               ),
             ),
             Column(
@@ -143,10 +158,19 @@ Widget gridMovie(Movie movie,context){
           ],
           ),
     ); 
+  }
 }
 
-Widget watchButton(context, buttonText ,videoId,AdmobInterstitial interstitialAd){
-  return Container(
+class WatchButtonWidget extends StatelessWidget {
+  final BuildContext context;
+  final String buttonText;
+  final String videoId;
+  final AdmobInterstitial interstitialAd;
+  const WatchButtonWidget(this.context,this.buttonText,this.videoId,this.interstitialAd);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
           margin: EdgeInsets.symmetric(horizontal: 10),
           height: 30,
           width: 100,
@@ -169,4 +193,5 @@ Widget watchButton(context, buttonText ,videoId,AdmobInterstitial interstitialAd
               },
           ),
         );
+  }
 }

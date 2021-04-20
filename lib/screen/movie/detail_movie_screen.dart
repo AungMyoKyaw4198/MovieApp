@@ -1,5 +1,4 @@
 import 'package:admob_flutter/admob_flutter.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/components/movies_widgets.dart';
 import 'package:youTubeApp/components/widget.dart';
@@ -68,16 +67,6 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
                 title: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // Expanded(
-                      //   flex: 2,
-                      //   child: Align(
-                      //     alignment: Alignment.centerLeft,
-                      //     child: IconButton(icon: Icon(Icons.arrow_back,), onPressed: (){
-                      //       Navigator.pushReplacement(context, MaterialPageRoute(
-                      //       builder: (context)=> AllMoviesScreen()),);
-                      //     },alignment: Alignment.centerLeft,),
-                      //   ),
-                      // ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
@@ -115,7 +104,7 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
              children: <Widget>[
                Container(
                  width: MediaQuery.of(context).size.width,
-                 child: CachedNetworkImage(imageUrl:widget.movie.posterUrl,height: 400,fit: BoxFit.fill,),
+                 child: Image.network(widget.movie.posterUrl,height: 400,fit: BoxFit.fill,),
                ),
                Container(
                   color: Colors.transparent,
@@ -132,9 +121,9 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
                        itemCount: widget.movie.url.length,
                        itemBuilder: (BuildContext context, int index){
                          return Center(
-                           child: watchButton(context, 'Link ${index+1}',widget.movie.url[index].toString(),interstitialAd ));
+                           child: WatchButtonWidget(context, 'Link ${index+1}',widget.movie.url[index].toString(),interstitialAd ));
                      }),
-                   ): watchButton(context, 'Watch', widget.movie.url[0].toString(),interstitialAd),
+                   ): WatchButtonWidget(context, 'Watch', widget.movie.url[0].toString(),interstitialAd),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,14 +141,14 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
                         widget.favs.removeFavorite(convertMovieToVideo(widget.movie));
                         isAldyFav = false;
                       });
-                      showMessage(context,'Removed from favourite');
+                      ShowMessageWidget(context,'Removed from favourite');
                       }): 
                       IconButton(icon: Icon(Icons.favorite_border, color: Colors.red,), onPressed: (){
                       setState(() {
                         widget.updateFavourite(widget.movie);
                         isAldyFav = true;
                       });
-                      showMessage(context,'Added to favourite');
+                      ShowMessageWidget(context,'Added to favourite');
                       }),
                   
                   ] 

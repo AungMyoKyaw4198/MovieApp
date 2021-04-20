@@ -154,7 +154,7 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
     return Scaffold(
       backgroundColor: Color(0xff141a32),
       appBar: mainAppBar(),
-      drawer: drawerWidget(context),
+      drawer: DrawerWidget(context),
       body: hasError ? 
           Center(
             child: Column(
@@ -212,7 +212,8 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                   itemCount: categoryList.length,
                   itemBuilder: (BuildContext context, int index){
                     return Center(
-                      child: movieCategories(categoryList[index].imageUrl,categoryList[index].name,allMovieList,context));
+                      child: MovieCategoriesWidget(categoryList[index].imageUrl,categoryList[index].name,allMovieList,context));
+                      // child: movieCategories(categoryList[index].imageUrl,categoryList[index].name,allMovieList,context));
                 }),
               ),
 
@@ -230,7 +231,7 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                   itemCount: recomdMovieList.length,
                   itemBuilder: (BuildContext context, int index){
                     return Center(
-                      child: recommendMovie(recomdMovieList[index],context));
+                      child: RecomdMoviesWidget(recomdMovieList[index],context));
                 }),
               ),
 
@@ -248,7 +249,7 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                   itemCount: 15,
                   itemBuilder: (BuildContext context, int index){
                     return Center(
-                      child: recommendMovie(newMovieList[index],context));
+                      child: RecomdMoviesWidget(newMovieList[index],context));
                 }),
               ),
 
@@ -292,7 +293,7 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                   crossAxisSpacing: 10.0,
                   crossAxisCount: 3,
                   children: List.generate(allMovieList.length, (index){
-                    return gridMovie(allMovieList[index],context);
+                    return GridMovieWidget(allMovieList[index],context);
                   }
                   ),),
               ),

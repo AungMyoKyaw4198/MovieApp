@@ -22,7 +22,7 @@ class _TvChannelState extends State<TvChannel> {
     return Scaffold(
        backgroundColor: Color(0xff141a32),
        appBar: mainAppBar(),
-       drawer: drawerWidget(context),
+       drawer: DrawerWidget(context),
        body: SingleChildScrollView(
          child: Column(
                     children: <Widget>[

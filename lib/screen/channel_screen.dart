@@ -37,7 +37,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
   if (await canLaunch(url)) {
     await launch(url);
   } else {
-    showMessage(context,'Could not launch URL at this time! Please try again.');
+    ShowMessageWidget(context,'Could not launch URL at this time! Please try again.');
   }
 }
 
@@ -166,7 +166,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   crossAxisSpacing: 6.0,
                   crossAxisCount: 2,
                   children: List.generate(widget.channel.videos.length, (index){
-                     return buildVideoChannel(video: widget.channel.videos[index],context: context,interstitialAd: interstitialAd);
+                     return BuildVideoChannelWidget(video: widget.channel.videos[index],context: context,interstitialAd: interstitialAd);
                     }
                   ),
                 ),

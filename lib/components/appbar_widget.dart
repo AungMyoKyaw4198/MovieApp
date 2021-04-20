@@ -44,7 +44,7 @@ class DrawerWidget extends StatelessWidget {
                 ListTile(
                   title: Align(
                     alignment: Alignment.centerRight,
-                    child: Text('version 1.1.0', style: TextStyle(color: Colors.white),))
+                    child: Text('version 1.2.0', style: TextStyle(color: Colors.white),))
                 )
                 ]
               ),

@@ -253,10 +253,10 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                 }),
               ),
 
-              Align(
-                alignment: Alignment.center,
-                child: AdManager.largeBannerAdWidget(),
-              ),
+              // Align(
+              //   alignment: Alignment.center,
+              //   child: AdManager.largeBannerAdWidget(),
+              // ),
               SizedBox(height: 10,),
               Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -297,9 +297,9 @@ class _AllMoviesScreenState extends State<AllMoviesScreen> {
                   }
                   ),),
               ),
-              Align(
-                child: AdManager.smallBannerAdWidget(),
-              ),
+              // Align(
+              //   child: AdManager.smallBannerAdWidget(),
+              // ),
             ],
             ),
           ),

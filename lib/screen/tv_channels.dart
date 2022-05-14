@@ -33,7 +33,8 @@ class _TvChannelState extends State<TvChannel> {
                    scrollDirection: Axis.vertical,
                    itemCount: tvChannelsJson.length,
                    separatorBuilder: (BuildContext context, int index){
-                    return (index != 0 && index % 5 == 0) ? AdManager.largeBannerAdWidget(): SizedBox.shrink();
+                    // return (index != 0 && index % 5 == 0) ? AdManager.largeBannerAdWidget(): SizedBox.shrink();
+                    return (index != 0 && index % 5 == 0) ? SizedBox.shrink(): SizedBox.shrink();
                   },
                    itemBuilder: (BuildContext context, int index) {
                      return Container(

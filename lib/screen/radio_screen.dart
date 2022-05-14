@@ -33,7 +33,7 @@ class _RadioScreenState extends State<RadioScreen> {
           body: Column(
             children: <Widget>[
               Container(
-                height: MediaQuery.of(context).size.height-130,
+                height: MediaQuery.of(context).size.height-80,
               child: InAppWebView(
                   initialUrl: 'https://www.myanmartvchannels.com/radio.html',
                   initialHeaders: {},
@@ -59,7 +59,7 @@ class _RadioScreenState extends State<RadioScreen> {
                   },
                 ),
               ),
-              AdManager.smallBannerAdWidget(),
+              // AdManager.smallBannerAdWidget(),
             ],
           ),
     );

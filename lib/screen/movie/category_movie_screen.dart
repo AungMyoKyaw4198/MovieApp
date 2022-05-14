@@ -38,10 +38,10 @@ class _CategoryMovieScreenState extends State<CategoryMovieScreen> {
                   child: Text("${widget.title} Movies",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),)
                   ),
 
-                  Align(
-                    alignment: Alignment.center,
-                    child: AdManager.largeBannerAdWidget(),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.center,
+                  //   child: AdManager.largeBannerAdWidget(),
+                  // ),
 
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),

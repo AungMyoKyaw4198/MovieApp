@@ -67,7 +67,7 @@ class _FavScreenState extends State<FavScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              AdManager.largeBannerAdWidget(),
+              // AdManager.largeBannerAdWidget(),
               // favourite video list
               Container(
                 child: ListView.builder(

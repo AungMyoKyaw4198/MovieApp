@@ -22,7 +22,8 @@ class _TvViewState extends State<TvView> {
           body: Column(
             children: <Widget>[
               Container(
-                height: MediaQuery.of(context).size.height-130,
+                // height: MediaQuery.of(context).size.height-130,
+                height: MediaQuery.of(context).size.height-80,
                 child: InAppWebView(
                   initialUrl: widget.url,
                   initialHeaders: {},
@@ -50,7 +51,7 @@ class _TvViewState extends State<TvView> {
                   },
                 ),
               ),
-              AdManager.smallBannerAdWidget(),
+              // AdManager.smallBannerAdWidget(),
             ],
           ),
     );

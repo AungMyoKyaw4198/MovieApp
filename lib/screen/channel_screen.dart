@@ -142,7 +142,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
               ]
                 ),
               ),
-              AdManager.largeBannerAdWidget(),
+              // AdManager.largeBannerAdWidget(),
               // 'All Videos' Text
               Container(
                 margin: EdgeInsets.only(left: 20,top: 10,bottom: 10),
@@ -171,7 +171,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   ),
                 ),
               ),
-              AdManager.largeBannerAdWidget(),
+              // AdManager.largeBannerAdWidget(),
               SizedBox(height: 30),
             ],),
     ),

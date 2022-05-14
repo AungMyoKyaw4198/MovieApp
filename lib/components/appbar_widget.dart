@@ -39,8 +39,8 @@ class DrawerWidget extends StatelessWidget {
                 Divider(color: Colors.grey,),
                 DrawerListTile(icon: Icons.live_tv,name: 'TV Channels', context: context, routeName: Routes.channel),
                 Divider(color: Colors.grey,),
-                DrawerListTile(icon: Icons.radio,name: 'Radio Channels', context: context, routeName: Routes.radio),
-                Divider(color: Colors.grey,),
+                // DrawerListTile(icon: Icons.radio,name: 'Radio Channels', context: context, routeName: Routes.radio),
+                // Divider(color: Colors.grey,),
                 ListTile(
                   title: Align(
                     alignment: Alignment.centerRight,

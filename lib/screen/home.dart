@@ -151,7 +151,7 @@ class _HomeScreenState extends State<Home> {
                 }),
               ),
 
-               AdManager.largeBannerAdWidget(),
+              //  AdManager.largeBannerAdWidget(),
 
               // Show videos container
               Container(
@@ -160,7 +160,8 @@ class _HomeScreenState extends State<Home> {
                   physics: ClampingScrollPhysics(),
                   itemCount: channels.length,
                   separatorBuilder: (BuildContext context, int index){
-                    return (index != 0 && index % 5 == 0) ? AdManager.largeBannerAdWidget(): SizedBox.shrink();
+                    // return (index != 0 && index % 5 == 0) ? AdManager.largeBannerAdWidget(): SizedBox.shrink();
+                    return (index != 0 && index % 5 == 0) ? SizedBox.shrink(): SizedBox.shrink();
                   },
                   itemBuilder: (BuildContext context, int index){
                                  return Column(
@@ -172,7 +173,7 @@ class _HomeScreenState extends State<Home> {
                                  );
                 }),
               ),
-             AdManager.largeBannerAdWidget(),
+            //  AdManager.largeBannerAdWidget(),
             ],
             ),
           )

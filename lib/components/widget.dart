@@ -1,11 +1,19 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:admob_flutter/admob_flutter.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/model/channel.dart';
 import 'package:youTubeApp/model/video.dart';
 import 'package:youTubeApp/screen/channel_screen.dart';
 import 'package:youTubeApp/screen/video_screen.dart';
+import 'package:youTubeApp/services/ads.dart';
 
-Widget buildProfileInfo({Channel channel,context}) {
+class BuildProfileInfoWidget extends StatelessWidget {
+  final Channel channel;
+  final BuildContext context;
+  const BuildProfileInfoWidget({this.channel,this.context});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(5.0),
       padding: EdgeInsets.all(5.0),
@@ -47,8 +55,15 @@ Widget buildProfileInfo({Channel channel,context}) {
       ),
     );
   }
+}
 
-Widget channelTitle({Channel channel, context}){
+class ChannelTitleWidget extends StatelessWidget {
+  final Channel channel;
+  final BuildContext context;
+  const ChannelTitleWidget({this.channel, this.context});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Row(
@@ -76,9 +91,8 @@ Widget channelTitle({Channel channel, context}){
             color: Color(0xffecba1a),
           ),
           
-            child: OutlineButton(
-              color: Colors.yellow[700],
-            child: Text("See All"),
+            child: OutlinedButton(
+            child: Text("See All",style: TextStyle(color: Colors.black),),
             onPressed: (){
                 Navigator.push(context, MaterialPageRoute(
                 builder: (context)=> ChannelScreen(channel: channel)),);
@@ -89,17 +103,36 @@ Widget channelTitle({Channel channel, context}){
         ),
     );
   }
+}
 
-Widget videoListView({Channel channel,context}){
-  return channel.videos.length!=0?
-        Container(
+class VideoListViewWidget extends StatelessWidget {
+  final Channel channel;
+  final BuildContext context;
+  final AdmobInterstitial interstitialAd;
+
+  const VideoListViewWidget({this.channel,this.context,this.interstitialAd});
+
+  @override
+  Widget build(BuildContext context) {
+    return channel.videos.length!=0?
+        channel.id == 'UCBZWU1iRrtll1QoO9O_rD_w' ?
+            Container(
+              height: 140,
+              child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 3,
+            itemBuilder: (BuildContext context, int index) {
+              return BuildVideoWidget(video: channel.videos[index], context: context);
+            },
+          ),
+        )
+        :Container(
           height: 140,
           child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 8,
         itemBuilder: (BuildContext context, int index) {
-          Video video = channel.videos[index];
-          return buildVideo(video: video, context: context);
+          return BuildVideoWidget(video: channel.videos[index], context: context, interstitialAd: interstitialAd);
         },
       ),
     ):
@@ -111,15 +144,27 @@ Widget videoListView({Channel channel,context}){
               ),
             );
   }
+}
 
-Widget buildVideo({Video video,context}) {
+class BuildVideoWidget extends StatelessWidget {
+  final Video video;
+  final BuildContext context;
+  final AdmobInterstitial interstitialAd;
+  const BuildVideoWidget({this.video,this.context,this.interstitialAd});
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => VideoScreen(video: video,),
-        ),
-      ),
+      onTap: (){
+        AdManager.loadFullScreenAd(interstitialAd);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => VideoScreen(video: video,),
+          ),
+        );
+      } ,
+        
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
@@ -155,15 +200,27 @@ Widget buildVideo({Video video,context}) {
       ),
     );
   }
+}
 
-Widget buildVideoChannel({Video video,context}) {
+class BuildVideoChannelWidget extends StatelessWidget {
+  final Video video;
+  final BuildContext context;
+  final AdmobInterstitial interstitialAd;
+  const BuildVideoChannelWidget({this.video,this.context,this.interstitialAd});
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => VideoScreen(video: video,),
-        ),
-      ),
+      onTap: (){
+        AdManager.loadFullScreenAd(interstitialAd);            
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => VideoScreen(video: video,),
+          ),
+        );
+      },
+      
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
@@ -195,11 +252,54 @@ Widget buildVideoChannel({Video video,context}) {
       ),
     );
   }
+}
 
- Widget showMessage(BuildContext context,String message){
-      return Flushbar(
+class ShowMessageWidget extends StatelessWidget {
+  final BuildContext context;
+  final String message;
+  const ShowMessageWidget(this.context,this.message);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flushbar(
          message: message,
                 duration:  Duration(seconds: 3), 
-                // margin: EdgeInsets.only(bottom: 50),             
                 )..show(context);
   }
+}
+
+class FavVideoListViewWidget extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final String subTitle;
+  const FavVideoListViewWidget(this.imageUrl,this.title,this.subTitle);
+
+  @override
+  Widget build(BuildContext context) {
+     return Container(
+          decoration: BoxDecoration(
+            color: Color(0xff1e2747),
+            borderRadius: BorderRadius.circular(20)),
+          padding: EdgeInsets.symmetric(horizontal:10, vertical: 10),
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical:10),
+          child: Row(children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(imageUrl,height: 80,width: 100, fit: BoxFit.cover,cacheHeight: 200,cacheWidth: 200,),
+          ),
+          Expanded(
+            child: Container(
+              padding:  EdgeInsets.only(left: 10),
+              alignment: Alignment.centerLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                Text(title, style: TextStyle(color: Colors.white)),
+                Text(subTitle, style: TextStyle(color: Colors.blue),),
+              ],),
+            ),
+          )
+        ],),
+      );
+  }
+}

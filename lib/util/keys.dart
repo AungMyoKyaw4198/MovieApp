@@ -1,20 +1,31 @@
+import 'package:youTubeApp/model/category.dart';
 import 'package:youTubeApp/model/channel.dart';
+import 'package:youTubeApp/model/movie.dart';
+
 
 const String API_Key= 'AIzaSyD6xP6xKcKeJgDDyFTgtaDOUEy_ynTwBwg';
 List<Channel> channelCache = [];
 
-List<String> channelIDs = [
-  'UCJFGNmtLtwmX752P7OhcdvQ',
-  'UCyprSUcaLP0mQAB1b9N90pg',
-  'UCWZzuQbRIeAKM9Nx-11-d_Q',
-  'UCesiu2rvAlopyNVzEK4RFMA',
-  'UC_IUdjPSWoo1jov91VEHa7A',
-  'UCBZWU1iRrtll1QoO9O_rD_w',
-  'UC_kHjyFSbgLvESmeLhxLB8g',
-  'UCbpn8tQkYB-zMMqo22-YnfA',
-  // 'UCnMSAeSm7jGwyLxD7XqZSQA',
-  // 'UCHPlq7aOD9SObbSWpYtyRPw',
-  ];
+List<Category> categoryCache = [];
+List<Movie> moviesCache = [];
+List<Movie> recomdMovieListCache = [];
+List<Movie> newMovieListCache = [];
+String appUnitId = '';
+String bannerAdId = '';
+String fullScreenAdId= '';
+
+// List<String> channelIDs = [
+//   'UCJFGNmtLtwmX752P7OhcdvQ',
+//   'UCyprSUcaLP0mQAB1b9N90pg',
+//   'UCWZzuQbRIeAKM9Nx-11-d_Q',
+//   'UCtM609HMCJHMA812GdHvxqA',
+//   'UCesiu2rvAlopyNVzEK4RFMA',
+//   'UC_IUdjPSWoo1jov91VEHa7A',
+//   'UCSaXL4MiaEG0m0yEHKWzpgQ',
+//   // 'UCBZWU1iRrtll1QoO9O_rD_w',
+//   'UC_kHjyFSbgLvESmeLhxLB8g',
+//   'UCbpn8tQkYB-zMMqo22-YnfA',
+//   ];
 
 List<Map<String,String>> tvChannelsJson = [
   {

@@ -15,7 +15,7 @@ class FavouriteStorage {
     final path = await _localPath;
     return File('$path/favoriteVideo.dat');
   }
- 
+
   Future writeFavorites(List favoritesList) async {
     try {
       final file = await _localFile;
@@ -31,7 +31,7 @@ class FavouriteStorage {
  
     return false;
   }
- 
+
   Future readFavorites() async {
     try {
       final file = await _localFile;
@@ -39,13 +39,14 @@ class FavouriteStorage {
       // Read the file
       String jsonString = await file.readAsString();
       Iterable jsonMap = jsonDecode(jsonString);
-      List favs = jsonMap.map((parsedJson) => Video.fromJson(parsedJson)).toList();
+      List<Video> favs = jsonMap.map((parsedJson) => Video.fromJson(parsedJson)).toList();
       return favs;
  
     } catch (e) {
       print('error');
     }
  
+    // ignore: deprecated_member_use
     return List();
   }
 }

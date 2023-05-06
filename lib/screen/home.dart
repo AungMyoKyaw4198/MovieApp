@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
 import 'package:youTubeApp/components/widget.dart';
 import 'package:youTubeApp/model/channel.dart';
+import 'package:youTubeApp/services/ads.dart';
 import 'package:youTubeApp/services/api_service.dart';
 import 'package:youTubeApp/util/keys.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:admob_flutter/admob_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   static const String routeName= '/home';
@@ -17,32 +22,19 @@ class Home extends StatefulWidget {
 
 class _HomeScreenState extends State<Home> {
   BannerAd myBannerAd;
-  List<Channel> channels = new List();
+  AdmobInterstitial interstitialAd;
+  List<Channel> channels = [];
   Channel channel;
   bool errorExist = false;
   bool isLoading = true;
 
-  BannerAd biuldBannerAd(){
-    return BannerAd(
-      adUnitId: 'ca-app-pub-8107971978330636/6213831627',
-      size: AdSize.banner,
-      listener: (MobileAdEvent event){
-        if (event == MobileAdEvent.loaded){
-          myBannerAd..show();
-        }
-        print("BannerAd $event");
-      },
-    );
-  }
-
   @override
   void initState() {
-    FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-8107971978330636~8056578093');
-    // myBannerAd = biuldBannerAd()..load();
     super.initState();
 
     // if there is not cache,load videos.
     if(channelCache.length == 0){
+      print('channel caching');
       getVideos();
     } else { 
       setState(() {
@@ -51,40 +43,44 @@ class _HomeScreenState extends State<Home> {
         errorExist = false;
       });
     }
-  }
-
-  @override
-  void dispose() { 
-    // myBannerAd.dispose();
-    super.dispose();
+    interstitialAd = AdManager.initFullScreenAd(interstitialAd);
+    interstitialAd.load();
   }
 
   // get videos from the api
-  Future getVideos() async {
+  getVideos() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     isLoading = true;
     errorExist = false;
     // Check if connection exist
     if (connectivityResult != ConnectivityResult.none) {
-        for(int i=0; i<channelIDs.length; i++){
-          channel = new Channel();
-          channel = await APIService.instance
-            .fetchChannel(channelId: channelIDs[i]);
-          setState(() {
-            channels.add(channel);
-            channelCache.add(channel);
-
-            // For error handling, check loading is finished? and is error exist?
-            if(i == 7){
-              isLoading = false;
-              if(channelCache.length == 0){
-                errorExist = true;
-              }else{
-                errorExist = false;
-              }
+      await http.get('https://aungmyokyaw4198.github.io/KyiyaaungData/youtubechannels.json').then(
+        (value){
+          dynamic jsonData = jsonDecode(value.body);
+          jsonData.forEach(
+            (value) async {
+              channel = new Channel();
+              channel = await APIService.instance
+                .fetchChannel(channelId: value.toString());
+              setState(() {
+                  channels.add(channel);
+                  channelCache.add(channel);
+                  print(channel.id);              
+                });
             }
-          });
+          );
         }
+      ).catchError((error){
+        setState(() {
+          errorExist = true;
+        });
+        print(error);
+      });
+
+      // After loading is finished
+      setState(() {
+          isLoading = false;   
+        });
     } else{
       setState(() {
         errorExist = true;
@@ -97,7 +93,7 @@ class _HomeScreenState extends State<Home> {
     return Scaffold(
       backgroundColor: Color(0xff141a32),
       appBar: mainAppBar(),
-      drawer: drawerWidget(context),
+      drawer: DrawerWidget(context),
       body: errorExist ? 
 
           // Show error image
@@ -128,9 +124,8 @@ class _HomeScreenState extends State<Home> {
                     borderRadius: BorderRadius.circular(10),
                     color: Color(0xffecba1a),
                   ),
-                  child: OutlineButton(
-                    color: Colors.yellow[700],
-                    child: Text("Tap to Retry"),
+                  child: OutlinedButton(
+                    child: Text("Tap to Retry",style: TextStyle(color: Colors.black),),
                     onPressed: (){
                       getVideos();
                     },
@@ -152,26 +147,33 @@ class _HomeScreenState extends State<Home> {
                   scrollDirection: Axis.horizontal,
                   itemCount: channels.length,
                   itemBuilder: (BuildContext context, int index){
-                                 return buildProfileInfo(channel: channels[index],context: context);
+                                 return BuildProfileInfoWidget(channel: channels[index],context: context);
                 }),
               ),
 
+              //  AdManager.largeBannerAdWidget(),
+
               // Show videos container
               Container(
-                child: ListView.builder(
+                child: ListView.separated(
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
                   itemCount: channels.length,
+                  separatorBuilder: (BuildContext context, int index){
+                    // return (index != 0 && index % 5 == 0) ? AdManager.largeBannerAdWidget(): SizedBox.shrink();
+                    return (index != 0 && index % 5 == 0) ? SizedBox.shrink(): SizedBox.shrink();
+                  },
                   itemBuilder: (BuildContext context, int index){
                                  return Column(
                                    children:<Widget>[
-                                     channelTitle(channel:channels[index], context: context),
-                                     videoListView(channel: channels[index],context: context),
+                                     ChannelTitleWidget(channel:channels[index], context: context),
+                                     VideoListViewWidget(channel: channels[index],context: context,interstitialAd: interstitialAd),
                                      SizedBox(height: 15),
                                    ]
                                  );
                 }),
               ),
+            //  AdManager.largeBannerAdWidget(),
             ],
             ),
           )

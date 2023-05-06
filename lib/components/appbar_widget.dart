@@ -10,8 +10,13 @@ Widget mainAppBar(){
       );
 }
 
-Widget drawerWidget(context){
-  return Drawer(
+class DrawerWidget extends StatelessWidget {
+  final BuildContext context;
+  const DrawerWidget(this.context);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
           child: Container(
             color: Color(0xff1e2747),
                       child: ListView(
@@ -28,24 +33,36 @@ Widget drawerWidget(context){
                       ),
                   ),
                 Divider(color: Colors.grey,),
-                drawerListTile(icon: Icons.local_movies,name: 'MM Movies', context: context,routeName: Routes.movie),
-                drawerListTile(icon: Icons.person,name: 'Favourite Movies',context: context, routeName: Routes.favVideo),
+                DrawerListTile(icon: Icons.movie,name: 'Foreign Movies', context: context,routeName: Routes.movies),
+                DrawerListTile(icon: Icons.local_movies,name: 'MM Movies', context: context,routeName: Routes.movie),
+                DrawerListTile(icon: Icons.person,name: 'Favourite Movies',context: context, routeName: Routes.favVideo),
                 Divider(color: Colors.grey,),
-                drawerListTile(icon: Icons.live_tv,name: 'TV Channels', context: context, routeName: Routes.channel),
+                DrawerListTile(icon: Icons.live_tv,name: 'TV Channels', context: context, routeName: Routes.channel),
                 Divider(color: Colors.grey,),
-                drawerListTile(icon: Icons.radio,name: 'Radio Channels', context: context, routeName: Routes.radio),
-                Divider(color: Colors.grey,),
+                // DrawerListTile(icon: Icons.radio,name: 'Radio Channels', context: context, routeName: Routes.radio),
+                // Divider(color: Colors.grey,),
                 ListTile(
-                  title: Text('version 1.0.0', style: TextStyle(color: Colors.white),)
+                  title: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text('version 1.2.0', style: TextStyle(color: Colors.white),))
                 )
                 ]
               ),
           ),
             );
+  }
 }
 
-Widget drawerListTile({IconData icon, String name,context,String routeName}){
-  return InkWell(
+class DrawerListTile extends StatelessWidget {
+  final IconData icon;
+  final String name;
+  final BuildContext context;
+  final String routeName;
+  const DrawerListTile({this.icon,this.name,this.context,this.routeName});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
     onTap: (){
        Navigator.pushReplacementNamed(context, routeName);
     },
@@ -69,4 +86,5 @@ Widget drawerListTile({IconData icon, String name,context,String routeName}){
         ],),
     )
   );
+  }
 }

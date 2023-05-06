@@ -22,7 +22,7 @@ class VideoScreen extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoScreen> {
-  List<Video> videoList = new List();
+  List<Video> videoList = [];
   YoutubePlayerController _controller;
   List<Video> videos;
   bool isAldyFav = false;
@@ -33,7 +33,7 @@ class _VideoScreenState extends State<VideoScreen> {
     List<Video> videos =await widget.favs.readAllFavorites();
     setState(() {
       videoList = videos;
-       if(videoList.any((p) => p.id == video.id)){
+       if(videoList.any((p) => p.title == video.title)){
          isAldyFav = true;
        }
        else{
@@ -99,6 +99,7 @@ class _VideoScreenState extends State<VideoScreen> {
                               child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
+                                  // ignore: deprecated_member_use
                                   FlatButton(
                                     child: Text(widget.video.channelTitle, style: TextStyle(
                                             color: Colors.blue,
@@ -115,23 +116,22 @@ class _VideoScreenState extends State<VideoScreen> {
                                             widget.favs.removeFavorite(widget.video);
                                             isAldyFav = false;
                                           });
-                                          showMessage(context,'Removed from favourite');
+                                          ShowMessageWidget(context,'Removed from favourite');
                                           }): 
                                           IconButton(icon: Icon(Icons.favorite_border, color: Colors.red,), onPressed: (){
                                       setState(() {
                                         widget.updateFavourite(widget.video);
                                         isAldyFav = true;
                                       });
-                                      showMessage(context,'Added to favourite');
+                                      ShowMessageWidget(context,'Added to favourite');
                                       }),
                                       ],),
                           ),
-
                           Container(
                             color: Color(0xff1e2747),
                             height: 20,),
-                            ],
-                        );
+                      ],     
+                    );
                   }
                   ),
             )

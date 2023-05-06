@@ -1,8 +1,8 @@
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/material.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
 import 'package:youTubeApp/screen/tv_channelView.dart';
+import 'package:youTubeApp/services/ads.dart';
 import 'package:youTubeApp/util/keys.dart';
 
 
@@ -16,49 +16,26 @@ class TvChannel extends StatefulWidget {
 
 class _TvChannelState extends State<TvChannel> {
   InAppWebViewController webView;
-  BannerAd myBannerAd;
-
-  BannerAd biuldBannerAd(){
-    return BannerAd(
-      adUnitId: 'ca-app-pub-8107971978330636/6213831627',
-      size: AdSize.banner,
-      listener: (MobileAdEvent event){
-        if (event == MobileAdEvent.loaded){
-          myBannerAd..show();
-        }
-        print("BannerAd $event");
-      },
-    );
-  }
-
-  @override
-  void initState() {
-    FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-8107971978330636~8056578093');
-    // myBannerAd = biuldBannerAd()..load();
-    super.initState();
-  }
-
-  @override
-  void dispose() { 
-    // myBannerAd.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
        backgroundColor: Color(0xff141a32),
        appBar: mainAppBar(),
-       drawer: drawerWidget(context),
+       drawer: DrawerWidget(context),
        body: SingleChildScrollView(
          child: Column(
                     children: <Widget>[
                       Container(
-                   child: ListView.builder(
+                   child: ListView.separated(
                    shrinkWrap: true,
                    physics: ClampingScrollPhysics(),
                    scrollDirection: Axis.vertical,
                    itemCount: tvChannelsJson.length,
+                   separatorBuilder: (BuildContext context, int index){
+                    // return (index != 0 && index % 5 == 0) ? AdManager.largeBannerAdWidget(): SizedBox.shrink();
+                    return (index != 0 && index % 5 == 0) ? SizedBox.shrink(): SizedBox.shrink();
+                  },
                    itemBuilder: (BuildContext context, int index) {
                      return Container(
                        padding: EdgeInsets.all(10),

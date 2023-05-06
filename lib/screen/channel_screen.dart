@@ -1,9 +1,11 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youTubeApp/components/appbar_widget.dart';
 import 'package:youTubeApp/components/widget.dart';
 import 'package:youTubeApp/model/channel.dart';
 import 'package:youTubeApp/model/video.dart';
+import 'package:youTubeApp/services/ads.dart';
 import 'package:youTubeApp/services/api_service.dart';
 
 class ChannelScreen extends StatefulWidget {
@@ -16,6 +18,7 @@ class ChannelScreen extends StatefulWidget {
 
 class _ChannelScreenState extends State<ChannelScreen> {
   bool _isLoading = true;
+  AdmobInterstitial interstitialAd;
 
   // Function for loading videos
    _loadMoreVideos() async {
@@ -34,13 +37,15 @@ class _ChannelScreenState extends State<ChannelScreen> {
   if (await canLaunch(url)) {
     await launch(url);
   } else {
-    showMessage(context,'Could not launch URL at this time! Please try again.');
+    ShowMessageWidget(context,'Could not launch URL at this time! Please try again.');
   }
 }
 
   @override
   void initState() {
     super.initState();
+    interstitialAd = AdManager.initFullScreenAd(interstitialAd);
+    interstitialAd.load();
     _loadMoreVideos();
   }
 
@@ -58,6 +63,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                           scrollDetails.metrics.pixels ==
                               scrollDetails.metrics.maxScrollExtent) {
                         _loadMoreVideos();
+                        
                       }
                       return false;
                     },
@@ -123,9 +129,8 @@ class _ChannelScreenState extends State<ChannelScreen> {
                           borderRadius: BorderRadius.circular(10),
                           color: Color(0xffecba1a),
                         ),
-                          child: OutlineButton(
-                          color: Colors.yellow[700],
-                          child: Text("Watch on Youtube"),
+                          child: OutlinedButton(
+                          child: Text("Watch on Youtube",style: TextStyle(color: Colors.black)),
                           onPressed: (){
                              _launchURL(context,'https://www.youtube.com/channel/${widget.channel.id}');
                           },
@@ -137,7 +142,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
               ]
                 ),
               ),
-
+              // AdManager.largeBannerAdWidget(),
               // 'All Videos' Text
               Container(
                 margin: EdgeInsets.only(left: 20,top: 10,bottom: 10),
@@ -151,7 +156,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                         ),
               ),
 
-              // Sghow video container
+              // Show video container
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: GridView.count(
@@ -161,10 +166,12 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   crossAxisSpacing: 6.0,
                   crossAxisCount: 2,
                   children: List.generate(widget.channel.videos.length, (index){
-                    return buildVideoChannel(video: widget.channel.videos[index],context: context);
-                  }
-                  ),),
+                     return BuildVideoChannelWidget(video: widget.channel.videos[index],context: context,interstitialAd: interstitialAd);
+                    }
+                  ),
+                ),
               ),
+              // AdManager.largeBannerAdWidget(),
               SizedBox(height: 30),
             ],),
     ),

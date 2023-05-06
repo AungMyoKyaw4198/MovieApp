@@ -1,11 +1,11 @@
 class Video {
-  final String id;
-  final String title;
-  final String thumbnailUrl;
-  final String channelTitle;
-  final String viewCount;
-  final String duration;
-  final String publishAt;
+  String id;
+  String title;
+  String thumbnailUrl; //poster url
+  String channelTitle; // category
+  String viewCount; //description
+  String duration; // status and subtitle
+  String publishAt; // url
 
   Video({
     this.id,
